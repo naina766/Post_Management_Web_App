@@ -172,159 +172,162 @@ export default function Explore() {
   };
 
   return (
-    <main className="explore-page py-4 page-enter-animate">
-      <Container style={{ maxWidth: "1200px" }}>
-        {/* Unified Page Header */}
-        <PageHeader
-          title="Explore"
-          description="Discover conversations, creators, and ideas worth following."
-        />
+    <div className="explore-page page-enter-animate">
+      {/* Unified Page Header */}
+      <PageHeader
+        title="Explore"
+        description="Discover conversations, creators, and ideas worth following."
+      />
 
-        {/* Top Prominent Search Bar */}
-        <div className="search-bar-wrapper d-flex align-items-center px-3 py-2 mb-4 mx-auto" style={{ maxWidth: "720px" }}>
-          {searching ? (
-            <Spinner size="sm" animation="border" variant="primary" style={{ width: 16, height: 16 }} className="me-2.5 flex-shrink-0" />
-          ) : (
-            <FiSearch className="text-muted me-2.5 flex-shrink-0" size={16} />
-          )}
-          <input
-            type="text"
-            placeholder="Search creators, topics, or hashtags..."
-            value={searchQuery}
-            onChange={handleSearchChange}
-            className="search-bar-input flex-grow-1 bg-transparent border-0 text-body"
-            aria-label="Search creators, topics, or hashtags"
-          />
-          {searchQuery && (
-            <button
-              type="button"
-              className="btn btn-sm text-muted p-0 border-0 ms-1 flex-shrink-0"
-              onClick={() => {
-                setSearchQuery("");
-                setSearchResults(null);
-              }}
-              title="Clear search"
-              aria-label="Clear search"
-            >
-              ✕
-            </button>
-          )}
-        </div>
-
-        {/* Compact Filter Chips Row */}
-        {trendingTags.length > 0 && !searchResults && (
-          <div className="d-flex align-items-center gap-2 overflow-x-auto pb-2 mb-4 mx-auto no-scrollbar" style={{ maxWidth: "720px" }}>
-            <button
-              type="button"
-              className={`explore-filter-chip ${activeTab === "trending" && !currentTag ? "active" : ""}`}
-              onClick={() => {
-                setActiveTab("trending");
-                setCurrentTag("");
-                setSearchParams({});
-              }}
-            >
-              All
-            </button>
-            {trendingTags.map((t) => (
+      <div className="explore-content-layout">
+        {/* Main Discovery Feed Column */}
+        <section className="explore-stream-column">
+          {/* Top Prominent Search Bar */}
+          <div className="search-bar-wrapper d-flex align-items-center px-3 py-2 mb-3 mx-auto" style={{ maxWidth: "700px" }}>
+            {searching ? (
+              <Spinner size="sm" animation="border" variant="primary" style={{ width: 16, height: 16 }} className="me-2.5 flex-shrink-0" />
+            ) : (
+              <FiSearch className="text-muted me-2.5 flex-shrink-0" size={16} />
+            )}
+            <input
+              type="text"
+              role="searchbox"
+              placeholder="Search creators, topics, or hashtags..."
+              value={searchQuery}
+              onChange={handleSearchChange}
+              className="search-bar-input flex-grow-1 bg-transparent border-0 text-body"
+              aria-label="Search creators, topics, or hashtags"
+            />
+            {searchQuery && (
               <button
-                key={t.tag}
                 type="button"
-                className={`explore-filter-chip ${activeTab === "hashtag" && currentTag === t.tag ? "active" : ""}`}
-                onClick={() => handleTagClick(t.tag)}
+                className="btn btn-sm text-muted p-0 border-0 ms-1 flex-shrink-0"
+                onClick={() => {
+                  setSearchQuery("");
+                  setSearchResults(null);
+                }}
+                title="Clear search"
+                aria-label="Clear search"
               >
-                #{t.tag}
+                ✕
               </button>
-            ))}
+            )}
           </div>
-        )}
 
-        {/* Live Search Results View */}
-        {searchResults && (
-          <div className="search-results-overlay mx-auto mb-5" style={{ maxWidth: "780px" }}>
-            <h5 className="fw-bold mb-3 d-flex align-items-center gap-2 text-body">
-              <FiSearch className="text-primary" /> Search Results for "{searchQuery}"
-            </h5>
-
-            {/* Matching Users */}
-            {searchResults.users && searchResults.users.length > 0 && (
-              <div className="mb-4">
-                <h6 className="text-muted text-uppercase small fw-bold mb-2">People</h6>
-                <div className="row g-2.5">
-                  {searchResults.users.map((u) => (
-                    <div key={u._id} className="col-12 col-md-6">
-                      <Link
-                        to={`/profile/${u.username}`}
-                        className="card p-3 h-100 text-decoration-none text-body hover-shadow border rounded-3 bg-card"
-                      >
-                        <div className="d-flex align-items-center gap-2.5">
-                          {u.avatar ? (
-                            <img src={u.avatar} alt={u.name} className="rounded-circle object-fit-cover" style={{ width: 40, height: 40 }} />
-                          ) : (
-                            <div className="rounded-circle bg-primary text-white fw-bold d-flex align-items-center justify-content-center" style={{ width: 40, height: 40 }}>
-                              {(u.name || "U")[0].toUpperCase()}
-                            </div>
-                          )}
-                          <div className="overflow-hidden">
-                            <div className="fw-semibold small text-truncate d-flex align-items-center gap-1">
-                              {u.name} {u.isVerified && <FiCheckCircle className="text-primary" size={13} />}
-                            </div>
-                            <div className="text-muted small text-truncate" style={{ fontSize: "12px" }}>@{u.username}</div>
-                          </div>
-                        </div>
-                      </Link>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Matching Hashtags */}
-            {searchResults.hashtags && searchResults.hashtags.length > 0 && (
-              <div className="mb-4">
-                <h6 className="text-muted text-uppercase small fw-bold mb-2">Hashtags</h6>
-                <div className="d-flex flex-wrap gap-2">
-                  {searchResults.hashtags.map((h) => (
-                    <Button
-                      key={h.tag}
-                      variant="outline-primary"
-                      size="sm"
-                      className="rounded-pill px-3 py-1 small fw-medium"
-                      onClick={() => handleTagClick(h.tag)}
-                    >
-                      #{h.tag} <Badge bg="primary" pill className="ms-1.5">{h.count}</Badge>
-                    </Button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Matching Posts */}
-            {searchResults.posts && searchResults.posts.length > 0 && (
-              <div className="d-flex flex-column gap-3">
-                <h6 className="text-muted text-uppercase small fw-bold mb-0">Posts</h6>
-                {searchResults.posts.map((post) => (
-                  <PostCard key={post._id} post={post} currentUser={currentUser} />
+          {/* Compact Filter Chips Row — with adequate right padding so final chip never clips */}
+          {trendingTags.length > 0 && !searchResults && (
+            <div className="explore-filter-chips-wrapper mb-3 mx-auto" style={{ maxWidth: "700px" }}>
+              <div className="explore-filter-chips-scroll no-scrollbar" role="tablist" aria-label="Filter by topic">
+                <button
+                  type="button"
+                  className={`explore-filter-chip ${activeTab === "trending" && !currentTag ? "active" : ""}`}
+                  onClick={() => {
+                    setActiveTab("trending");
+                    setCurrentTag("");
+                    setSearchParams({});
+                  }}
+                >
+                  All
+                </button>
+                {trendingTags.map((t) => (
+                  <button
+                    key={t.tag}
+                    type="button"
+                    className={`explore-filter-chip ${activeTab === "hashtag" && currentTag === t.tag ? "active" : ""}`}
+                    onClick={() => handleTagClick(t.tag)}
+                  >
+                    #{t.tag}
+                  </button>
                 ))}
               </div>
-            )}
+            </div>
+          )}
 
-            {searchResults.users?.length === 0 && searchResults.posts?.length === 0 && searchResults.hashtags?.length === 0 && (
-              <EmptyState 
-                title="No results found" 
-                message={`Nothing matched "${searchQuery}". Try another keyword or explore trending topics.`}
-                actionText="Explore Trending"
-                actionLink="/explore"
-              />
-            )}
-          </div>
-        )}
+          {/* Live Search Results View */}
+          {searchResults && (
+            <div className="search-results-overlay mx-auto mb-4" style={{ maxWidth: "700px" }}>
+              <h5 className="fw-bold mb-3 d-flex align-items-center gap-2 text-body">
+                <FiSearch className="text-primary" /> Search Results for "{searchQuery}"
+              </h5>
 
-        {/* Regular Explore Two-Column Layout */}
-        {!searchResults && (
-          <Row className="g-3 g-lg-4 align-items-start">
-            {/* Main Discovery Feed Column */}
-            <Col lg={8}>
-              {/* Unified Feed Navigation Control — only when browsing content or a tag */}
+              {/* Matching Users */}
+              {searchResults.users && searchResults.users.length > 0 && (
+                <div className="mb-4">
+                  <h6 className="text-muted text-uppercase small fw-bold mb-2" style={{ fontSize: "11px", letterSpacing: "0.5px" }}>People</h6>
+                  <div className="row g-2">
+                    {searchResults.users.map((u) => (
+                      <div key={u._id} className="col-12 col-sm-6">
+                        <Link
+                          to={`/profile/${u.username}`}
+                          className="card p-2.5 h-100 text-decoration-none text-body hover-shadow border rounded-3 bg-card"
+                        >
+                          <div className="d-flex align-items-center gap-2">
+                            {u.avatar ? (
+                              <img src={u.avatar} alt={u.name} className="rounded-circle object-fit-cover flex-shrink-0" style={{ width: 34, height: 34 }} />
+                            ) : (
+                              <div className="rounded-circle bg-primary text-white fw-bold d-flex align-items-center justify-content-center flex-shrink-0" style={{ width: 34, height: 34, fontSize: "12px" }}>
+                                {(u.name || "U")[0].toUpperCase()}
+                              </div>
+                            )}
+                            <div className="overflow-hidden">
+                              <div className="fw-semibold small text-truncate d-flex align-items-center gap-1">
+                                {u.name} {u.isVerified && <FiCheckCircle className="text-primary" size={12} />}
+                              </div>
+                              <div className="text-muted small text-truncate" style={{ fontSize: "11px" }}>@{u.username}</div>
+                            </div>
+                          </div>
+                        </Link>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Matching Hashtags */}
+              {searchResults.hashtags && searchResults.hashtags.length > 0 && (
+                <div className="mb-4">
+                  <h6 className="text-muted text-uppercase small fw-bold mb-2" style={{ fontSize: "11px", letterSpacing: "0.5px" }}>Hashtags</h6>
+                  <div className="d-flex flex-wrap gap-2">
+                    {searchResults.hashtags.map((h) => (
+                      <Button
+                        key={h.tag}
+                        variant="outline-primary"
+                        size="sm"
+                        className="rounded-pill px-3 py-1 small fw-medium"
+                        onClick={() => handleTagClick(h.tag)}
+                      >
+                        #{h.tag} <Badge bg="primary" pill className="ms-1.5">{h.count}</Badge>
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Matching Posts */}
+              {searchResults.posts && searchResults.posts.length > 0 && (
+                <div className="d-flex flex-column gap-3">
+                  <h6 className="text-muted text-uppercase small fw-bold mb-0" style={{ fontSize: "11px", letterSpacing: "0.5px" }}>Posts</h6>
+                  {searchResults.posts.map((post) => (
+                    <PostCard key={post._id} post={post} currentUser={currentUser} />
+                  ))}
+                </div>
+              )}
+
+              {searchResults.users?.length === 0 && searchResults.posts?.length === 0 && searchResults.hashtags?.length === 0 && (
+                <EmptyState 
+                  title="No results found" 
+                  message={`Nothing matched "${searchQuery}". Try another keyword or explore trending topics.`}
+                  actionText="Explore Trending"
+                  actionLink="/explore"
+                />
+              )}
+            </div>
+          )}
+
+          {/* Regular Explore Feed */}
+          {!searchResults && (
+            <div>
+              {/* Unified Feed Navigation Control */}
               {(loading || error || trendingPosts.length > 0 || currentTag) && (
                 <div className="feed-tabs-container mb-3">
                   <div className="feed-tabs-scroll" role="tablist" aria-label="Explore tabs">
@@ -397,121 +400,128 @@ export default function Explore() {
                   ))}
                 </div>
               )}
-            </Col>
+            </div>
+          )}
+        </section>
 
-            {/* Discovery Sidebar Widgets Column */}
-            <Col lg={4}>
-              <div className="explore-sidebar-stack d-flex flex-column gap-3">
-                {/* Trending Hashtags Widget */}
-                <div className="bg-card p-3 rounded-4 border shadow-sm explore-widget-card">
-                  <h6 className="fw-bold mb-3 d-flex align-items-center gap-2 text-body">
-                    <FiTrendingUp className="text-primary" aria-hidden="true" /> Trending Hashtags
-                  </h6>
-                  {trendingTags.length === 0 ? (
-                    <div className="explore-widget-empty text-center py-3 px-2">
-                      <div className="text-primary mb-2 opacity-75" aria-hidden="true">
-                        <FiTag size={22} />
-                      </div>
-                      <div className="small fw-semibold text-body mb-1">No trending topics yet</div>
-                      <p className="text-muted mb-0" style={{ fontSize: "12.5px", lineHeight: 1.55 }}>
-                        Popular topics will appear as the community grows.
-                      </p>
-                    </div>
-                  ) : (
-                    <div className="d-flex flex-column gap-1">
-                      {trendingTags.map((tag) => (
-                        <button
-                          key={tag.tag}
-                          type="button"
-                          className="ph-trending-item d-flex justify-content-between align-items-center p-2 rounded-3 border-0 bg-transparent text-start w-100"
-                          onClick={() => handleTagClick(tag.tag)}
-                          aria-label={`Explore hashtag ${tag.tag}`}
-                        >
-                          <div>
-                            <div className="fw-semibold small text-primary">#{tag.tag}</div>
-                            <span className="text-muted" style={{ fontSize: "11px" }}>
-                              {tag.count} {tag.count === 1 ? "post" : "posts"}
-                            </span>
-                          </div>
-                          <Badge bg="primary-subtle" text="primary" className="border-0 px-2 py-1">
-                            Trending
-                          </Badge>
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                {/* Suggested Creators Widget */}
-                {suggestedUsers.length > 0 ? (
-                  <div className="bg-card p-3 rounded-4 border shadow-sm explore-widget-card">
-                    <h6 className="fw-bold mb-3 d-flex align-items-center gap-2 text-body">
-                      <FiUsers className="text-primary" aria-hidden="true" /> Popular Creators
-                    </h6>
-                    <div className="d-flex flex-column gap-2.5">
-                      {suggestedUsers.map((u) => (
-                        <div key={u._id} className="d-flex align-items-center justify-content-between gap-2">
-                          <Link
-                            to={`/profile/${u.username}`}
-                            className="d-flex align-items-center gap-2 text-decoration-none text-body overflow-hidden"
-                          >
-                            {u.avatar ? (
-                              <img
-                                src={u.avatar}
-                                alt=""
-                                className="rounded-circle object-fit-cover flex-shrink-0"
-                                style={{ width: 36, height: 36 }}
-                              />
-                            ) : (
-                              <div
-                                className="post-author-avatar rounded-circle flex-shrink-0"
-                                style={{ width: 36, height: 36, fontSize: "0.7rem" }}
-                                aria-hidden="true"
-                              >
-                                {(u.name || "U").slice(0, 2).toUpperCase()}
-                              </div>
-                            )}
-                            <div className="overflow-hidden">
-                              <div className="fw-semibold small text-truncate">{u.name}</div>
-                              <div className="text-muted small text-truncate" style={{ fontSize: "11px" }}>
-                                @{u.username}
-                              </div>
-                            </div>
-                          </Link>
-                          <Button
-                            variant={u.isFollowing ? "outline-secondary" : "outline-primary"}
-                            size="sm"
-                            className="ph-follow-btn rounded-pill py-0.5 px-2.5 small flex-shrink-0"
-                            onClick={() => handleToggleFollow(u._id)}
-                            aria-label={u.isFollowing ? `Unfollow ${u.name}` : `Follow ${u.name}`}
-                          >
-                            {u.isFollowing ? <FiUserCheck size={13} /> : <FiUserPlus size={13} />}
-                          </Button>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  <div className="bg-card p-3 rounded-4 border shadow-sm explore-widget-card">
-                    <h6 className="fw-bold mb-3 d-flex align-items-center gap-2 text-body">
-                      <FiUsers className="text-primary" aria-hidden="true" /> Popular Creators
-                    </h6>
-                    <div className="explore-widget-empty text-center py-3 px-2">
-                      <div className="text-primary mb-2 opacity-75" aria-hidden="true">
-                        <FiUsers size={22} />
-                      </div>
-                      <div className="small fw-semibold text-body mb-1">No creators to show yet</div>
-                      <p className="text-muted mb-0" style={{ fontSize: "12.5px", lineHeight: 1.55 }}>
-                        Suggested creators will appear here as the community grows.
-                      </p>
-                    </div>
-                  </div>
-                )}
+        {/* Discovery Sidebar Widgets Column (Desktop >= xl) */}
+        <aside className="d-none d-xl-block explore-widgets-column">
+          <div className="explore-sidebar-stack d-flex flex-column gap-3 sticky-top" style={{ top: "80px" }}>
+            {/* Trending Hashtags Widget */}
+            <div className="bg-card p-3 rounded-3 border shadow-sm explore-widget-card">
+              <div className="d-flex align-items-center justify-content-between mb-2 pb-2 border-bottom">
+                <h6 className="fw-bold mb-0 d-flex align-items-center gap-1.5 fs-6 text-body">
+                  <FiTrendingUp className="text-primary" size={16} aria-hidden="true" /> Trending Topics
+                </h6>
               </div>
-            </Col>
-          </Row>
-        )}
-      </Container>
-    </main>
+              {trendingTags.length === 0 ? (
+                <div className="explore-widget-empty text-center py-2.5 px-2">
+                  <div className="text-primary mb-1.5 opacity-75" aria-hidden="true">
+                    <FiTag size={20} />
+                  </div>
+                  <div className="small fw-semibold text-body mb-0.5">No trending topics yet</div>
+                  <p className="text-muted mb-0" style={{ fontSize: "11.5px" }}>
+                    Popular topics will appear as the community grows.
+                  </p>
+                </div>
+              ) : (
+                <div className="d-flex flex-column">
+                  {trendingTags.map((tag) => (
+                    <button
+                      key={tag.tag}
+                      type="button"
+                      className="ph-trending-item d-flex justify-content-between align-items-center py-2 px-2.5 rounded-2 border-0 bg-transparent text-start w-100 hover-bg"
+                      onClick={() => handleTagClick(tag.tag)}
+                      aria-label={`Explore hashtag ${tag.tag}`}
+                    >
+                      <div>
+                        <div className="fw-semibold small text-primary">#{tag.tag}</div>
+                        <span className="text-muted" style={{ fontSize: "11.5px" }}>
+                          {tag.count} {tag.count === 1 ? "post" : "posts"}
+                        </span>
+                      </div>
+                      <Badge bg="primary-subtle" text="primary" className="border-0 px-2 py-0.5 small fw-medium" style={{ fontSize: "11px" }}>
+                        Trending
+                      </Badge>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Popular Creators Widget */}
+            {suggestedUsers.length > 0 ? (
+              <div className="bg-card p-3 rounded-3 border shadow-sm explore-widget-card">
+                <div className="d-flex align-items-center justify-content-between mb-2 pb-2 border-bottom">
+                  <h6 className="fw-bold mb-0 d-flex align-items-center gap-1.5 fs-6 text-body">
+                    <FiUsers className="text-success" size={16} aria-hidden="true" /> Popular Creators
+                  </h6>
+                </div>
+                <div className="d-flex flex-column gap-2">
+                  {suggestedUsers.map((u) => (
+                    <div key={u._id} className="d-flex align-items-center justify-content-between gap-2">
+                      <Link
+                        to={`/profile/${u.username}`}
+                        className="d-flex align-items-center gap-2 text-decoration-none text-body overflow-hidden"
+                      >
+                        {u.avatar ? (
+                          <img
+                            src={u.avatar}
+                            alt=""
+                            className="rounded-circle object-fit-cover flex-shrink-0"
+                            style={{ width: 32, height: 32 }}
+                          />
+                        ) : (
+                          <div
+                            className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold flex-shrink-0"
+                            style={{ width: 32, height: 32, fontSize: "11px" }}
+                            aria-hidden="true"
+                          >
+                            {(u.name || "U").slice(0, 2).toUpperCase()}
+                          </div>
+                        )}
+                        <div className="overflow-hidden">
+                          <div className="small fw-bold text-truncate" style={{ maxWidth: "110px", fontSize: "0.85rem" }}>{u.name}</div>
+                          <div className="text-muted small text-truncate" style={{ maxWidth: "110px", fontSize: "11px" }}>
+                            @{u.username}
+                          </div>
+                        </div>
+                      </Link>
+                      <Button
+                        variant={u.isFollowing ? "outline-secondary" : "outline-primary"}
+                        size="sm"
+                        className={`ph-follow-btn rounded-pill py-0.5 px-2.5 small flex-shrink-0 ${u.isFollowing ? "is-following" : ""}`}
+                        style={{ fontSize: "11.5px" }}
+                        onClick={() => handleToggleFollow(u._id)}
+                        aria-label={u.isFollowing ? `Unfollow ${u.name}` : `Follow ${u.name}`}
+                      >
+                        {u.isFollowing ? <FiUserCheck size={12} /> : <><FiUserPlus size={12} /> Follow</>}
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="bg-card p-3 rounded-3 border shadow-sm explore-widget-card">
+                <div className="d-flex align-items-center justify-content-between mb-2 pb-2 border-bottom">
+                  <h6 className="fw-bold mb-0 d-flex align-items-center gap-1.5 fs-6 text-body">
+                    <FiUsers className="text-success" size={16} aria-hidden="true" /> Popular Creators
+                  </h6>
+                </div>
+                <div className="explore-widget-empty text-center py-2.5 px-2">
+                  <div className="text-primary mb-1.5 opacity-75" aria-hidden="true">
+                    <FiUsers size={20} />
+                  </div>
+                  <div className="small fw-semibold text-body mb-0.5">No creators to show yet</div>
+                  <p className="text-muted mb-0" style={{ fontSize: "11.5px" }}>
+                    Suggested creators will appear here as the community grows.
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+        </aside>
+      </div>
+    </div>
   );
 }

@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, Outlet } from "react-router-dom";
 import { Spinner } from "react-bootstrap";
 import { FiShare2 } from "react-icons/fi";
 
@@ -25,8 +25,8 @@ import { ThemeProvider } from "./context/ThemeContext";
 import { ToastProvider } from "./context/ToastContext";
 import ErrorBoundary from "./components/ErrorBoundary";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AuthenticatedLayout from "./components/AuthenticatedLayout";
 import AppNavbar from "./components/Navbar";
-import BottomNav from "./components/BottomNav";
 
 function RouteLoadingScreen() {
   return (
@@ -44,46 +44,57 @@ function RouteLoadingScreen() {
   );
 }
 
+function PublicLayout() {
+  return (
+    <div className="d-flex flex-column min-vh-100">
+      <AppNavbar />
+      <main className="flex-grow-1">
+        <Outlet />
+      </main>
+    </div>
+  );
+}
+
 function App() {
   return (
     <ErrorBoundary>
       <ThemeProvider>
         <ToastProvider>
           <UserProvider>
-            <div className="d-flex flex-column min-vh-100 pb-5 pb-lg-0">
-              <AppNavbar />
-              <div className="flex-grow-1">
-                <Suspense fallback={<RouteLoadingScreen />}>
-                  <Routes>
-                    {/* Public Routes */}
-                    <Route path="/" element={<Landing />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/signup" element={<Signup />} />
+            <Suspense fallback={<RouteLoadingScreen />}>
+              <Routes>
+                {/* Public Routes */}
+                <Route element={<PublicLayout />}>
+                  <Route path="/" element={<Landing />} />
+                  <Route path="/landing" element={<Landing />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/signup" element={<Signup />} />
+                </Route>
 
-                    {/* Protected Routes */}
-                    <Route element={<ProtectedRoute />}>
-                      <Route path="/dashboard" element={<Dashboard />} />
-                      <Route path="/create-post" element={<CreatePost />} />
-                      <Route path="/edit-post/:id" element={<EditPost />} />
-                      <Route path="/profile" element={<Profile />} />
-                      <Route path="/profile/:username" element={<Profile />} />
-                      <Route path="/explore" element={<Explore />} />
-                      <Route path="/notifications" element={<Notifications />} />
-                      <Route path="/saved" element={<SavedPosts />} />
-                      <Route path="/analytics" element={<Analytics />} />
-                      <Route path="/creator" element={<Analytics />} />
-                      <Route path="/creator-analytics" element={<Analytics />} />
-                      <Route path="/admin" element={<Admin />} />
-                      <Route path="/settings" element={<Settings />} />
-                    </Route>
+                {/* Protected Routes inside Global Authenticated Shell */}
+                <Route element={<ProtectedRoute />}>
+                  <Route element={<AuthenticatedLayout />}>
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/create" element={<Navigate to="/create-post" replace />} />
+                    <Route path="/create-post" element={<CreatePost />} />
+                    <Route path="/edit-post/:id" element={<EditPost />} />
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/profile/:username" element={<Profile />} />
+                    <Route path="/explore" element={<Explore />} />
+                    <Route path="/notifications" element={<Notifications />} />
+                    <Route path="/saved" element={<SavedPosts />} />
+                    <Route path="/analytics" element={<Analytics />} />
+                    <Route path="/creator" element={<Navigate to="/creator-analytics" replace />} />
+                    <Route path="/creator-analytics" element={<Analytics />} />
+                    <Route path="/admin" element={<Admin />} />
+                    <Route path="/settings" element={<Settings />} />
+                  </Route>
+                </Route>
 
-                    {/* Fallback redirect to dashboard */}
-                    <Route path="*" element={<Navigate to="/dashboard" replace />} />
-                  </Routes>
-                </Suspense>
-              </div>
-              <BottomNav />
-            </div>
+                {/* Fallback redirect to dashboard */}
+                <Route path="*" element={<Navigate to="/dashboard" replace />} />
+              </Routes>
+            </Suspense>
           </UserProvider>
         </ToastProvider>
       </ThemeProvider>

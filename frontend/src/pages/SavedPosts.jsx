@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Container, Button, Spinner } from "react-bootstrap";
+import { Button, Spinner } from "react-bootstrap";
 import { FiBookmark, FiRefreshCw, FiAlertCircle } from "react-icons/fi";
 import { getSavedPosts } from "../services/posts";
 import { useUser } from "../context/UserContext";
@@ -66,12 +66,12 @@ export default function SavedPosts() {
   };
 
   return (
-    <main className="saved-posts-page py-4 page-enter-animate">
-      <Container style={{ maxWidth: "700px" }}>
+    <div className="saved-posts-page page-enter-animate">
+      <div className="ph-focused-page">
         {/* Page Header */}
         <PageHeader
           title="Saved Posts"
-          description="Keep the conversations and ideas you want to revisit."
+          description="Your bookmarked conversations and posts."
         />
 
         {error ? (
@@ -140,7 +140,7 @@ export default function SavedPosts() {
             )}
           </div>
         )}
-      </Container>
-    </main>
+      </div>
+    </div>
   );
 }

@@ -320,11 +320,11 @@ export default function Profile() {
 
   if (loading) {
     return (
-      <main className="py-4">
-        <Container style={{ maxWidth: "820px" }}>
+      <div className="py-3">
+        <Container style={{ maxWidth: "1100px" }}>
           <ProfileSkeleton />
         </Container>
-      </main>
+      </div>
     );
   }
 
@@ -344,8 +344,8 @@ export default function Profile() {
   const initial = getInitials(profile.name);
 
   return (
-    <main className="profile-page py-4">
-      <Container style={{ maxWidth: "820px" }}>
+    <div className="profile-page">
+      <Container style={{ maxWidth: "1100px" }}>
         {/* Cover Photo Header */}
         <div
           className={`profile-cover position-relative rounded-4 overflow-hidden border shadow-sm ${!profile.coverImage ? "profile-cover-fallback" : ""}`}
@@ -788,6 +788,6 @@ export default function Profile() {
           )}
         </Modal.Body>
       </Modal>
-    </main>
+    </div>
   );
 }

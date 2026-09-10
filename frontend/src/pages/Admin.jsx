@@ -138,8 +138,8 @@ export default function Admin() {
   ];
 
   return (
-    <main className="admin-page py-4 page-enter-animate">
-      <Container style={{ maxWidth: "1080px" }}>
+    <div className="admin-page page-enter-animate">
+      <Container style={{ maxWidth: "1200px" }}>
         {/* Unified Page Header */}
         <PageHeader
           title="Admin Dashboard"
@@ -555,6 +555,6 @@ export default function Admin() {
           </>
         )}
       </Container>
-    </main>
+    </div>
   );
 }

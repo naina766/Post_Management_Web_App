@@ -106,7 +106,7 @@ export default function AppNavbar() {
             as={Link}
             to={user ? "/dashboard" : "/"}
             onClick={handleNavClick}
-            className="posthub-brand d-flex align-items-center gap-2"
+            className="posthub-brand d-flex align-items-center gap-2 flex-shrink-0"
           >
             <FiShare2 className="brand-icon" aria-hidden="true" />
             <span>PostHub</span>
@@ -114,22 +114,36 @@ export default function AppNavbar() {
 
           <form
             onSubmit={handleSearchSubmit}
-            className="nav-search-form d-none d-md-flex align-items-center position-relative ms-2 ms-xl-3 me-2 flex-grow-1"
+            className="nav-search-form d-none d-md-flex align-items-center ms-3 ms-xl-4 me-3"
             role="search"
           >
-            <FiSearch
-              className="position-absolute start-0 ms-3 text-muted pointer-events-none"
-              size={15}
-              aria-hidden="true"
-            />
-            <input
-              type="search"
-              className="form-control nav-search-input"
-              placeholder="Search creators, #tags..."
-              value={navSearch}
-              onChange={(e) => setNavSearch(e.target.value)}
-              aria-label="Search PostHub"
-            />
+            <div className="ph-navbar-search">
+              <FiSearch
+                className="ph-navbar-search-icon"
+                size={16}
+                aria-hidden="true"
+              />
+              <input
+                type="text"
+                role="searchbox"
+                className="form-control nav-search-input"
+                placeholder="Search creators, #tags..."
+                value={navSearch}
+                onChange={(e) => setNavSearch(e.target.value)}
+                aria-label="Search PostHub"
+              />
+              {navSearch && (
+                <button
+                  type="button"
+                  className="ph-navbar-search-clear"
+                  onClick={() => setNavSearch("")}
+                  title="Clear search"
+                  aria-label="Clear search"
+                >
+                  <FiX size={14} aria-hidden="true" />
+                </button>
+              )}
+            </div>
           </form>
 
           <div className="d-flex align-items-center gap-2 d-lg-none ms-auto">
@@ -186,7 +200,7 @@ export default function AppNavbar() {
             </button>
           </div>
 
-          <div className="d-none d-lg-flex align-items-center gap-2 ms-auto">
+          <div className="d-none d-lg-flex align-items-center gap-2 ms-auto flex-shrink-0">
             {user && (
               <Link
                 to="/notifications"

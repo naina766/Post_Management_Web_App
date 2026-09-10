@@ -255,8 +255,8 @@ export default function CreatePost() {
 
 
   return (
-    <main className="py-4">
-      <Container style={{ maxWidth: "680px" }}>
+    <div className="create-post-page page-enter-animate">
+      <Container className="ph-page-container" style={{ maxWidth: "720px" }}>
         <div className="d-flex align-items-center justify-content-between mb-3">
           <Button
             as={Link}
@@ -501,6 +501,6 @@ export default function CreatePost() {
           </Form>
         </div>
       </Container>
-    </main>
+    </div>
   );
 }

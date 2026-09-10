@@ -163,8 +163,8 @@ export default function Settings() {
   ];
 
   return (
-    <main className="settings-page py-4 page-enter-animate">
-      <Container style={{ maxWidth: "940px" }}>
+    <div className="settings-page page-enter-animate">
+      <Container style={{ maxWidth: "1000px" }}>
         {/* Unified Page Header */}
         <PageHeader
           title="Settings"
@@ -617,6 +617,6 @@ export default function Settings() {
           </Modal.Footer>
         </Modal>
       </Container>
-    </main>
+    </div>
   );
 }

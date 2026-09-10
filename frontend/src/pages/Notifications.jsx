@@ -203,8 +203,8 @@ export default function Notifications() {
   };
 
   return (
-    <main className="notifications-page py-4 page-enter-animate">
-      <Container style={{ maxWidth: "700px" }}>
+    <div className="notifications-page page-enter-animate">
+      <Container className="ph-page-container" style={{ maxWidth: "900px" }}>
         {/* Page Header */}
         <PageHeader
           title="Notifications"
@@ -328,6 +328,6 @@ export default function Notifications() {
           </div>
         )}
       </Container>
-    </main>
+    </div>
   );
 }

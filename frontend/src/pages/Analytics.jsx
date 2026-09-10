@@ -44,8 +44,8 @@ export default function Analytics() {
   }, [loadAnalytics]);
 
   return (
-    <main className="analytics-page py-4 page-enter-animate">
-      <Container style={{ maxWidth: "880px" }}>
+    <div className="analytics-page page-enter-animate">
+      <Container style={{ maxWidth: "1100px" }}>
         {/* Unified Page Header with Period Selector */}
         <PageHeader
           title="Creator Analytics"
@@ -327,6 +327,6 @@ export default function Analytics() {
           );
         })()}
       </Container>
-    </main>
+    </div>
   );
 }

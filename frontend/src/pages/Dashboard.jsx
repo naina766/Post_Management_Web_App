@@ -18,7 +18,7 @@ import PostCard from "../components/PostCard";
 import Composer from "../components/Composer";
 import PostSkeleton from "../components/PostSkeleton";
 import EmptyState from "../components/EmptyState";
-import { LeftSidebar, RightWidgets } from "../components/Sidebar";
+import { RightWidgets } from "../components/Sidebar";
 
 export default function Dashboard() {
   const { user } = useUser();
@@ -138,13 +138,8 @@ export default function Dashboard() {
   };
 
   return (
-    <main className="dashboard-page py-3 py-md-4 page-enter-animate">
-      <div className="dashboard-container">
-        <div className="dashboard-layout-grid">
-          {/* Left Column: Navigation Sidebar (Desktop >= lg) */}
-          <aside className="d-none d-lg-block">
-            <LeftSidebar />
-          </aside>
+    <div className="dashboard-page page-enter-animate">
+      <div className="dashboard-content-layout">
 
           {/* Center Column: Main Community Feed */}
           <section className="feed-stream-column">
@@ -337,11 +332,10 @@ export default function Dashboard() {
           </section>
 
           {/* Right Column: Trending & Suggestions Widgets (Desktop >= xl) */}
-          <aside className="d-none d-xl-block">
+          <aside className="d-none d-xl-block dashboard-widgets-column">
             <RightWidgets />
           </aside>
         </div>
       </div>
-    </main>
   );
 }
